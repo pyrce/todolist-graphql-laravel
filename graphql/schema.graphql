@@ -1,0 +1,47 @@
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+
+type Mutation {
+    updateTodo(
+        id: ID!
+        titre: String! @rules(apply: ["required"])
+        description: String! @rules(apply: ["required"])
+        deadline: Date! @rules(apply: ["required"])
+        etat: Boolean! @rules(apply: ["required"])
+        priorite_id: ID! @rules(apply: ["required"])): TodolistsModel! @update
+
+    createTodo(
+        titre: String! @rules(apply: ["required"])
+        description: String! @rules(apply: ["required"])
+        deadline: Date! @rules(apply: ["required"])
+        etat: Boolean! @rules(apply: ["required"])
+        priorite_id: ID!): TodolistsModel! @create
+
+    updateTodoCheck(
+        id: ID!
+        etat: Boolean! @rules(apply: ["required"])): TodolistsModel! @update
+}
+
+
+type Query  {
+    Todolists: [TodolistsModel!]! @all
+    Todolist(id: Int! @eq): TodolistsModel @find
+
+}
+
+type TodolistsModel {
+    id: ID!
+    titre: String!
+    description:String!
+    deadline:Date!
+    etat:Boolean!
+    priorites: PrioritesModel!
+}
+type PrioritesModel {
+    id: ID!
+    libelle: String!
+}
