@@ -18,7 +18,7 @@ class Todolist extends Migration
             $table->string('titre');
             $table->date('deadline');
             $table->string('description');
-            $table->boolean('etat')->nullable();
+            $table->boolean('etat')->default(0);
             $table->integer('priorite_id');
         });
     }

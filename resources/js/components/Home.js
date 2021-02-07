@@ -6,9 +6,12 @@ class Home extends Component {
     
     render() {
         return (
-          
+            <div>
+          <div className="">
+
+          </div>
 <Todolists />
-           
+           </div>
         )
     }
 }

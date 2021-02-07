@@ -30,7 +30,7 @@ type Mutation {
 type Query  {
     Todolists: [TodolistsModel!]! @all
     Todolist(id: Int! @eq): TodolistsModel @find
-
+    todos_priorite(priorite_id: Int @where(operator: "=")): [TodolistsModel!]! @all
 }
 
 type TodolistsModel {

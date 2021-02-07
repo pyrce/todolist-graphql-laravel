@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 import '../../css/app.css';   
-import { CardHeader,Card ,CardContent,Select,MenuItem   } from '@material-ui/core';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import { CardHeader,Card ,CardContent,Select,MenuItem ,CardActions   } from '@material-ui/core';
 
 class Todolists extends Component {
     constructor() {
@@ -17,6 +18,8 @@ class Todolists extends Component {
         this.add=this.add.bind(this);
         this.closeModal=this.closeModal.bind(this);
         this.closeEdit=this.closeEdit.bind(this);
+        this.filtre=this.filtre.bind(this);
+        this.terminer=this.terminer.bind(this);
     }
     
     componentDidMount() {
@@ -24,12 +27,14 @@ class Todolists extends Component {
     }
     
     getPostes(e) {
+        console.log("gert poste")
         axios.post('/graphql', {
             query: `
             {
                 Todolists{
                     id
                     titre
+                    etat
                 }
             }
         `
@@ -130,7 +135,7 @@ update(){
     `
       }).then(postes => {
         this.setState({ edit: false });
-this.getPostes
+this.getPostes()
        
    })
 }
@@ -143,6 +148,61 @@ this.getPostes
   closeEdit(){
     this.setState({ edit: false });
   }
+
+terminer(e){
+     axios.post('/graphql', {
+        query: `
+            mutation {
+                updateTodoCheck(
+                    id : ` + this.state.id + `
+                    etat: true
+                ) {
+                      id
+                      titre
+                      description
+                      deadline
+                      etat
+                      priorites {
+                        id
+                        libelle
+                      }
+                }
+            }
+        `
+      }).then(()=>{
+          this.setState({show:false})
+          this.getPostes()
+      })
+
+}
+
+
+  filtre=e=>{
+    let value = e.target.value
+    axios.post( 
+    "/graphql", {
+        query: `
+        {
+
+            todos_priorite(priorite_id:`+value+`) {
+                id
+                titre
+                deadline
+                description
+                priorites{
+                    id 
+                    libelle
+                  }
+            }
+        }
+   `
+     } ).then(postes => {
+          console.log(postes)
+          var t=Object.keys(postes.data.data).map((key) => postes.data.data[key]);
+          this.setState({ listes: t[0]})
+       
+   })
+  };
   onChange = e => {
     let value = e.target.value
     console.log(value);
@@ -176,18 +236,19 @@ this.getPostes
                     libelle
                   }
             }
+        }
       `
       }).then(postes => {
         this.setState({ add: false });
-this.getPostes
+this.getPostes()
        
    }) 
   }
     render() {
         return (
-            <div>
-                <Modal isOpen={this.state.show} onRequestClose={this.closeEdit}>
-                    <button onClick={this.closeModal}>close</button>
+            <div id="liste" className="container-fluid">
+                <Modal isOpen={this.state.show} className="mymodal" onRequestClose={this.closeEdit}>
+      
 
                     <Card>
                         <CardHeader title={this.state.titre} />
@@ -201,10 +262,15 @@ this.getPostes
                                 {this.state.description}
                             </div>
                         </CardContent>
+                        <CardActions>
+      <button onClick={this.closeModal}>Close</button>
+<button data-id={this.state.id} onClick={this.terminer}>Terminer </button>
+    </CardActions>
                     </Card>
+
                 </Modal>
 
-                <Modal isOpen={this.state.edit} onRequestClose={this.closeEdit}>
+                <Modal isOpen={this.state.edit}  className="mymodal" onRequestClose={this.closeEdit}>
                     <button onClick={this.closeEdit}>close</button>
 
                     <div className="row g-3">
@@ -214,7 +280,7 @@ this.getPostes
                         </div>
                         <div className="col-auto">
                             <label  className="visually-hidden">Deadline</label>
-                            <input type="date" className="form-control" id="inputPassword2" value={this.state.deadline}  />
+                            <input type="date" className="form-control" id="inputPassword2" value={this.state.deadline} onChange={(e=>{this.setState({deadline:e.target.value}) })} />
                         </div>
                         <div className="row">
                                 <label  className="visually-hidden col-auto">Description</label> <br/>
@@ -233,8 +299,8 @@ this.getPostes
                 </Modal>
 
 
-                <Modal isOpen={this.state.add} onRequestClose={this.closeEdit}>
-                    <button onClick={this.closeEdit}>close</button>
+                <Modal isOpen={this.state.add}  className="mymodal"  onRequestClose={this.closeEdit}>
+                    <button onClick={(e)=>this.setState({add:false})}>close</button>
 
                     <div className="row g-3">
                         <div className="col-auto">
@@ -245,7 +311,7 @@ this.getPostes
                             <label className="visually-hidden">Priorite</label>
                             <Select
           labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          id="select"
           onChange={this.onChange}
         >
           <MenuItem value={1}>Faible</MenuItem>
@@ -255,7 +321,7 @@ this.getPostes
                         </div>
                         <div className="col-auto">
                             <label  className="visually-hidden">Deadline</label>
-                            <input type="date" className="form-control" id="inputPassword2"  />
+                            <input type="date" className="form-control" id="inputPassword2"  onChange={(e=>{this.setState({deadline:e.target.value}) })} />
                         </div>
                         <div className="row">
                                 <label  className="visually-hidden col-auto">Description</label> <br/>
@@ -272,10 +338,21 @@ this.getPostes
 
                 </Modal>
 <button className="btn btn-primary" onClick={this.addTache}>ajout tache</button>
+<Select
+          labelId="demo-simple-select-label"
+          className="select"
+          onChange={this.filtre}
+        >
+          <MenuItem value={1}>Faible</MenuItem>
+          <MenuItem value={2}>Moyen</MenuItem>
+          <MenuItem value={3}>Fort</MenuItem>
+        </Select>
                 <ul className="list-group">
                     {this.state.listes.map(l =>
-                        <li className="list-group-item"  className={`${l.etat==1 ? "bg-secondary" : ""}`} >{l.titre}
+                        <li className={`list-group-item d-flex justify-content-between flex-row ${ l.etat==1 ? 'bg-success' : ''}`}  >
+                       <AssignmentIcon/>    {l.titre} 
 
+<span className="d-flex">
                             <button className="btn btn-primary" data-id={l.id} onClick={this.viewTache}>
                                 <i className="fas fa-search"></i>
                             </button>
@@ -283,7 +360,7 @@ this.getPostes
                             <button className="btn btn-info" data-id={l.id} onClick={this.editTache}>
                                 <i className="fas fa-edit"></i>
                             </button>
-
+</span>
                         </li>
 
 

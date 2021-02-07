@@ -1,0 +1,17 @@
+
+            body {
+                font-family: 'Nunito';
+            }
+.mymodal{
+
+    height: 30rem;
+    background-color: white;
+}
+
+#liste{
+    width: 30rem;
+}
+
+.select{
+    width:10rem;
+}
