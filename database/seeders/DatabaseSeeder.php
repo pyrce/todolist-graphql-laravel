@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\TodolistsModel;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -22,6 +23,6 @@ class DatabaseSeeder extends Seeder
         DB::table('Priorites')->insert([
             'libelle' =>"Fort"
         ]);
-         \App\Models\TodolistsModel::factory(10)->create();
+         TodolistsModel::factory(10)->create();
     }
 }

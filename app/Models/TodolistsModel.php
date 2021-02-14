@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TodolistsModel extends Model
 {
     use HasFactory;
-    protected $table = 'todolists';
+    protected $table = 'Todolists';
     public $timestamps = false;
     public function priorites(){
         return $this->belongsTo(PrioritesModel::class,'priorite_id');
