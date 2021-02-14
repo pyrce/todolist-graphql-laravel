@@ -189,6 +189,7 @@ terminer(e){
                 titre
                 deadline
                 description
+                etat
                 priorites{
                     id 
                     libelle
