@@ -88522,7 +88522,7 @@ var Todolists = /*#__PURE__*/function (_Component) {
     _defineProperty(_assertThisInitialized(_this), "filtre", function (e) {
       var value = e.target.value;
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/graphql", {
-        query: "\n        {\n\n            todos_priorite(priorite_id:" + value + ") {\n                id\n                titre\n                deadline\n                description\n                priorites{\n                    id \n                    libelle\n                  }\n            }\n        }\n   "
+        query: "\n        {\n\n            todos_priorite(priorite_id:" + value + ") {\n                id\n                titre\n                deadline\n                description\n                etat\n                priorites{\n                    id \n                    libelle\n                  }\n            }\n        }\n   "
       }).then(function (postes) {
         console.log(postes);
         var t = Object.keys(postes.data.data).map(function (key) {
@@ -88571,6 +88571,7 @@ var Todolists = /*#__PURE__*/function (_Component) {
     _this.update = _this.update.bind(_assertThisInitialized(_this));
     _this.addTache = _this.addTache.bind(_assertThisInitialized(_this));
     _this.add = _this.add.bind(_assertThisInitialized(_this));
+    _this.modif = _this.modif.bind(_assertThisInitialized(_this));
     _this.closeModal = _this.closeModal.bind(_assertThisInitialized(_this));
     _this.closeEdit = _this.closeEdit.bind(_assertThisInitialized(_this));
     _this.filtre = _this.filtre.bind(_assertThisInitialized(_this));
@@ -88698,6 +88699,16 @@ var Todolists = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
+    key: "modif",
+    value: function modif(e) {
+      this.setState({
+        show: false
+      });
+      this.setState({
+        edit: true
+      });
+    }
+  }, {
     key: "add",
     value: function add() {
       var _this7 = this;
@@ -88727,20 +88738,26 @@ var Todolists = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_5__["Card"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_5__["CardHeader"], {
         title: this.state.titre
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_5__["CardContent"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Dead line : ", this.state.deadline), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Priorite ", this.state.priorites.libelle)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_5__["CardActions"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-primary",
         onClick: this.closeModal
       }, "Close"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-success",
         "data-id": this.state.id,
         onClick: this.terminer
-      }, "Terminer ")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_2___default.a, {
+      }, "Terminer "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-info",
+        "data-id": this.state.id,
+        onClick: this.modif
+      }, "Modifier")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_2___default.a, {
         isOpen: this.state.edit,
         className: "mymodal",
         onRequestClose: this.closeEdit
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.closeEdit
-      }, "close"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "row g-3"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-auto"
+        className: "rows"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "rows"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "cols"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "visually-hidden"
       }, "Titre"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
@@ -88754,7 +88771,7 @@ var Todolists = /*#__PURE__*/function (_Component) {
         id: "titre",
         value: this.state.titre
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-auto"
+        className: "col-4"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "visually-hidden"
       }, "Deadline"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
@@ -88767,12 +88784,12 @@ var Todolists = /*#__PURE__*/function (_Component) {
             deadline: e.target.value
           });
         }
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "row"
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "rows"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-        className: "visually-hidden col-auto"
+        className: "visually-hidden col"
       }, "Description"), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
-        className: "col-auto",
+        className: "col",
         value: this.state.description,
         rows: 5,
         cols: 70,
@@ -88785,7 +88802,10 @@ var Todolists = /*#__PURE__*/function (_Component) {
         className: "btn btn-primary",
         onClick: this.update,
         type: "submit"
-      }, "Edit "))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_2___default.a, {
+      }, "Edit "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-primary",
+        onClick: this.closeEdit
+      }, "close"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_2___default.a, {
         isOpen: this.state.add,
         className: "mymodal",
         onRequestClose: this.closeEdit
@@ -88880,12 +88900,6 @@ var Todolists = /*#__PURE__*/function (_Component) {
           onClick: _this8.viewTache
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: "fas fa-search"
-        })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-          className: "btn btn-info",
-          "data-id": l.id,
-          onClick: _this8.editTache
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: "fas fa-edit"
         }))));
       })));
     }

@@ -16,6 +16,7 @@ class Todolists extends Component {
         this.update=this.update.bind(this);
         this.addTache=this.addTache.bind(this);
         this.add=this.add.bind(this);
+        this.modif=this.modif.bind(this);
         this.closeModal=this.closeModal.bind(this);
         this.closeEdit=this.closeEdit.bind(this);
         this.filtre=this.filtre.bind(this);
@@ -176,6 +177,10 @@ terminer(e){
 
 }
 
+modif(e){
+    this.setState({show:false});
+    this.setState({edit:true});
+}
 
   filtre=e=>{
     let value = e.target.value
@@ -250,7 +255,6 @@ this.getPostes()
             <div id="liste" className="container-fluid">
                 <Modal isOpen={this.state.show} className="mymodal" onRequestClose={this.closeEdit}>
       
-
                     <Card>
                         <CardHeader title={this.state.titre} />
                         <CardContent >
@@ -264,29 +268,37 @@ this.getPostes()
                             </div>
                         </CardContent>
                         <CardActions>
-      <button onClick={this.closeModal}>Close</button>
-<button data-id={this.state.id} onClick={this.terminer}>Terminer </button>
+      <button className="btn btn-primary" onClick={this.closeModal}>Close</button>
+<button className="btn btn-success" data-id={this.state.id} onClick={this.terminer}>Terminer </button>
+<button className="btn btn-info" data-id={this.state.id} onClick={this.modif }>Modifier</button>
+
     </CardActions>
                     </Card>
+
+
+
+
 
                 </Modal>
 
                 <Modal isOpen={this.state.edit}  className="mymodal" onRequestClose={this.closeEdit}>
-                    <button onClick={this.closeEdit}>close</button>
+                    
 
-                    <div className="row g-3">
-                        <div className="col-auto">
+                    <div className="rows">
+                        <div className="rows">
+                        <div className="cols">
                             <label className="visually-hidden">Titre</label>
                             <input type="text" className="form-control-plaintext" onChange={(e=>{this.setState({titre:e.target.value}) })} id="titre" value={this.state.titre} />
                         </div>
-                        <div className="col-auto">
+                        <div className="col-4">
                             <label  className="visually-hidden">Deadline</label>
                             <input type="date" className="form-control" id="inputPassword2" value={this.state.deadline} onChange={(e=>{this.setState({deadline:e.target.value}) })} />
                         </div>
-                        <div className="row">
-                                <label  className="visually-hidden col-auto">Description</label> <br/>
+                    </div>
+                        <div className="rows">
+                                <label  className="visually-hidden col">Description</label> <br/>
                                 <textarea
-                                className="col-auto"
+                                className="col"
           value={this.state.description}
           rows={5}
           cols={70}
@@ -294,6 +306,7 @@ this.getPostes()
         />
                         </div>
                         <button className="btn btn-primary" onClick={this.update} type="submit">Edit </button>
+                        <button className="btn btn-primary"  onClick={this.closeEdit}>close</button>
                     </div>
 
 
@@ -356,10 +369,6 @@ this.getPostes()
 <span className="d-flex">
                             <button className="btn btn-primary" data-id={l.id} onClick={this.viewTache}>
                                 <i className="fas fa-search"></i>
-                            </button>
-
-                            <button className="btn btn-info" data-id={l.id} onClick={this.editTache}>
-                                <i className="fas fa-edit"></i>
                             </button>
 </span>
                         </li>

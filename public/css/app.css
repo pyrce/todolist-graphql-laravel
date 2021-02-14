@@ -3,9 +3,11 @@
                 font-family: 'Nunito';
             }
 .mymodal{
-
+    width: 50rem;
     height: 30rem;
     background-color: white;
+    margin: 10rem 20rem;
+    border: solid black 1px;
 }
 
 #liste{
